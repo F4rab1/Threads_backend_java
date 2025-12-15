@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: threads
+  datasource:
+    url: jdbc:postgresql://localhost:5433/threads
+    username: fara
+    password: password
