@@ -25,4 +25,8 @@ public class Thread {
 
     @Column(nullable = false, length = 300)
     private String content = "";
+
+    @ManyToOne()
+    @JoinColumn(name = "author_id")
+    private User author;
 }
