@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "threads")
 public class Thread {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +23,9 @@ public class Thread {
     private LocalDateTime createdAt;
 
     @Column(nullable = false, length = 300)
-    private String content = "";
+    private String content;
 
-    @ManyToOne()
-    @JoinColumn(name = "author_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 }
