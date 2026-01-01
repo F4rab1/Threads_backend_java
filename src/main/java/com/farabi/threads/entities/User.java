@@ -1,5 +1,6 @@
 package com.farabi.threads.entities;
 
+import com.farabi.threads.threads.Thread;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
