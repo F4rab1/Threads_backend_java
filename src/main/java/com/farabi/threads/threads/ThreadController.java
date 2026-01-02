@@ -1,12 +1,12 @@
 package com.farabi.threads.threads;
 
+import com.farabi.threads.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping("/threads")
 public class ThreadController {
     private final ThreadRepository threadRepository;
+    private final UserRepository userRepository;
     private final ThreadMapper threadMapper;
 
     @GetMapping
@@ -31,5 +32,21 @@ public class ThreadController {
         var thread = threadRepository.findById(id).orElse(null);
 
         return ResponseEntity.ok(threadMapper.toResponseDto(thread));
+    }
+
+    @PostMapping
+    public ResponseEntity<ThreadResponseDto> createThread(@RequestBody CreateThreadRequest request) {
+        Long authorId = 1L;  // I need to change
+        var user = userRepository.findById(authorId).orElse(null);
+
+        var thread = new Thread();
+        thread.setContent(request.getContent());
+        thread.setAuthor(user);
+        thread.setCreatedAt(LocalDateTime.now());
+
+        Thread saved = threadRepository.save(thread);
+        ThreadResponseDto response = threadMapper.toResponseDto(saved);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
