@@ -1,6 +1,5 @@
-package com.farabi.threads.repositories;
+package com.farabi.threads.users;
 
-import com.farabi.threads.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {

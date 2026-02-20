@@ -1,4 +1,4 @@
-package com.farabi.threads.entities;
+package com.farabi.threads.users;
 
 import com.farabi.threads.threads.Thread;
 import jakarta.persistence.*;
@@ -24,17 +24,15 @@ public class User {
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String username;
-
-    @Column()
-    private String bio;
-
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false, length = 20)
-    private String role = "USER";
+    @Column(name = "role", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Thread> threads = new ArrayList<>();

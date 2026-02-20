@@ -1,6 +1,6 @@
 package com.farabi.threads.threads;
 
-import com.farabi.threads.repositories.UserRepository;
+import com.farabi.threads.users.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -44,6 +44,7 @@ public class ThreadController {
     public ResponseEntity<ThreadResponseDto> createThread(@RequestBody CreateThreadRequest request) {
         Long authorId = 1L;  // I need to change
         var user = userRepository.findById(authorId).orElse(null);
+        System.out.println(user.getProfile().getUsername());
 
         var thread = new Thread();
         thread.setContent(request.getContent());
