@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Set;
@@ -36,5 +37,18 @@ public class UserController {
         }
 
         return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponseDto> createUser(
+            @RequestBody RegisterUserRequestDto requestDto,
+            UriComponentsBuilder uriComponentsBuilder
+    ) {
+        var user = userMapper.toEntity(requestDto);
+        userRepository.save(user);
+
+        var userResponseDto = userMapper.toDto(user);
+        var uri = uriComponentsBuilder.path("users/{id}").buildAndExpand(userResponseDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(userResponseDto);
     }
 }
