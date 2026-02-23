@@ -14,29 +14,13 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         var users = userRepository.findAll()
                 .stream()
-                .map(user -> {
-                    ProfileResponseDto profileResponseDto = null;
-
-                    if (user.getProfile() != null) {
-                        profileResponseDto = new ProfileResponseDto(
-                            user.getProfile().getUsername(),
-                            user.getProfile().getBio()
-                        );
-                    }
-
-                    return new UserResponseDto(
-                        user.getId(),
-                        user.getName(),
-                        user.getEmail(),
-                        user.getRole().toString(),
-                        profileResponseDto
-                    );
-                })
+                .map(userMapper::toDto)
                 .toList();
         return ResponseEntity.ok(users);
     }
@@ -48,23 +32,6 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        ProfileResponseDto profileResponseDto = null;
-
-        if (user.getProfile() != null) {
-            profileResponseDto = new ProfileResponseDto(
-                user.getProfile().getUsername(),
-                user.getProfile().getBio()
-            );
-        }
-
-        UserResponseDto userResponseDto = new UserResponseDto(
-            user.getId(),
-            user.getName(),
-            user.getEmail(),
-            user.getRole().toString(),
-            profileResponseDto
-        );
-
-        return ResponseEntity.ok(userResponseDto);
+        return ResponseEntity.ok(userMapper.toDto(user));
     }
 }
