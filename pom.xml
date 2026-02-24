@@ -112,9 +112,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>${flyway.version}</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5433/threads</url>
-                    <user>fara</user>
-                    <password>password</password>
+                    <url>jdbc:postgresql://localhost:5432/threads</url>
+                    <user>postgres</user>
+                    <password>postgres</password>
                 </configuration>
             </plugin>
         </plugins>
