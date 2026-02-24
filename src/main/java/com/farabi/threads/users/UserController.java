@@ -51,4 +51,20 @@ public class UserController {
         var uri = uriComponentsBuilder.path("users/{id}").buildAndExpand(userResponseDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userResponseDto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateUserRequestDto requestDto
+    ) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userMapper.update(requestDto, user);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(userMapper.toDto(user));
+    }
 }
