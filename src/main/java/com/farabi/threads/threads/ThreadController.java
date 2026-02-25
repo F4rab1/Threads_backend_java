@@ -36,6 +36,10 @@ public class ThreadController {
     public ResponseEntity<ThreadResponseDto> getThreadById(@PathVariable Long id) {
         var thread = threadRepository.findById(id).orElse(null);
 
+        if (thread == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(threadMapper.toResponseDto(thread));
     }
 
