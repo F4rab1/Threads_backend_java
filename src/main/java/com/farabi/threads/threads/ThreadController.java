@@ -60,4 +60,15 @@ public class ThreadController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteThread(@PathVariable Long id) {
+        var thread = threadRepository.findById(id).orElse(null);
+        if (thread == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        threadRepository.delete(thread);
+        return ResponseEntity.noContent().build();
+    }
 }
