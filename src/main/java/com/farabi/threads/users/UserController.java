@@ -3,6 +3,7 @@ package com.farabi.threads.users;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -52,6 +53,26 @@ public class UserController {
         var userResponseDto = userMapper.toDto(user);
         var uri = uriComponentsBuilder.path("users/{id}").buildAndExpand(userResponseDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userResponseDto);
+    }
+
+    @PostMapping("{id}/change-password")
+    public ResponseEntity<Void> changePassword (
+            @PathVariable Long id,
+            @RequestBody ChangePasswordRequest request
+    ) {
+        var user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (!user.getPassword().equals(request.getOldPassword())) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        user.setPassword(request.getNewPassword());
+        userRepository.save(user);
+
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
