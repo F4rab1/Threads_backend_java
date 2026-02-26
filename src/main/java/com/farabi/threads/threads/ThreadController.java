@@ -61,6 +61,22 @@ public class ThreadController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ThreadResponseDto> updateThread(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UpdateThreadRequest request
+    ) {
+        var thread = threadRepository.findById(id).orElse(null);
+        if (thread == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        threadMapper.update(request, thread);
+        threadRepository.save(thread);
+
+        return ResponseEntity.ok(threadMapper.toResponseDto(thread));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteThread(@PathVariable Long id) {
         var thread = threadRepository.findById(id).orElse(null);
