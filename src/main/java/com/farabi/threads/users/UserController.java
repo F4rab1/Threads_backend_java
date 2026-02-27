@@ -1,6 +1,7 @@
 package com.farabi.threads.users;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(
-            @RequestBody RegisterUserRequestDto requestDto,
+            @Valid @RequestBody RegisterUserRequestDto requestDto,
             UriComponentsBuilder uriComponentsBuilder
     ) {
         var user = userMapper.toEntity(requestDto);
