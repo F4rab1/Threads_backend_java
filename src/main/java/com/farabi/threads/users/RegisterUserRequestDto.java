@@ -1,5 +1,6 @@
 package com.farabi.threads.users;
 
+import com.farabi.threads.common.Lowercase;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,6 +14,7 @@ public class RegisterUserRequestDto {
 
     @NotBlank(message = "Email is required")
     @Email(message = "Email must be valid")
+    @Lowercase(message = "Email bust be in lowercase")
     private String email;
 
     @NotBlank(message = "Password is required")
