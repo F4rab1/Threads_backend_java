@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers(HttpMethod.GET, "/threads/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .anyRequest().authenticated()
                 );
 
