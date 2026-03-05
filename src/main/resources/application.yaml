@@ -5,3 +5,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/threads
     username: postgres
     password: postgres
+  jwt:
+    secret: ${JWT_SECRET}
