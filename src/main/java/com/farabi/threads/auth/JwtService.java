@@ -1,5 +1,6 @@
 package com.farabi.threads.auth;
 
+import com.farabi.threads.users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -14,11 +15,13 @@ class JwtService {
     @Value("${spring.jwt.secret}")
     private String secretKey;
 
-    public String generateToken(String email) {
+    public String generateToken(User user) {
         final long tokenExpiration = 86400;
 
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getId().toString())
+                .claim("email", user.getEmail())
+                .claim("name", user.getName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
@@ -35,8 +38,8 @@ class JwtService {
         }
     }
 
-    public String getEmailFromToken(String token) {
-        return getClaims(token).getSubject();
+    public Long getUserIdFromToken(String token) {
+        return Long.valueOf(getClaims(token).getSubject());
     }
 
     private Claims getClaims(String token) {
