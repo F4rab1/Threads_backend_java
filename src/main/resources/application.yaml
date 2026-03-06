@@ -2,8 +2,8 @@ spring:
   application:
     name: threads
   datasource:
-    url: jdbc:postgresql://localhost:5432/threads
-    username: postgres
-    password: postgres
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jwt:
     secret: ${JWT_SECRET}

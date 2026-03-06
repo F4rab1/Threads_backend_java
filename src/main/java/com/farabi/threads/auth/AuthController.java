@@ -3,6 +3,8 @@ package com.farabi.threads.auth;
 import com.farabi.threads.users.UserMapper;
 import com.farabi.threads.users.UserRepository;
 import com.farabi.threads.users.UserResponseDto;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,7 +26,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(
-            @Valid @RequestBody LoginRequest request) {
+            @Valid @RequestBody LoginRequest request,
+            HttpServletResponse response
+    ) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -34,9 +38,17 @@ public class AuthController {
 
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
 
-        var token = jwtService.generateToken(user);
+        var accessToken = jwtService.generateAccessToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        var cookie = new Cookie("refresh_token", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(604800);  // 7 days
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @PostMapping("/validate")
