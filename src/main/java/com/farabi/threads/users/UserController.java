@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createUser(
+    public ResponseEntity<?> registerUser(
             @Valid @RequestBody RegisterUserRequestDto requestDto,
             UriComponentsBuilder uriComponentsBuilder
     ) {
@@ -61,6 +61,7 @@ public class UserController {
 
         var user = userMapper.toEntity(requestDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         userRepository.save(user);
 
         var userResponseDto = userMapper.toDto(user);
