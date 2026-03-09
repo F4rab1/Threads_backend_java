@@ -3,6 +3,7 @@ package com.farabi.threads.auth;
 import com.farabi.threads.users.UserMapper;
 import com.farabi.threads.users.UserRepository;
 import com.farabi.threads.users.UserResponseDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/auth")
+@Tag(name = "Authentication")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
