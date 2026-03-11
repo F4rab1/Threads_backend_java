@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,9 +51,14 @@ public class ThreadController {
     @PostMapping
     @Operation(summary = "Create a thread.")
     public ResponseEntity<ThreadResponseDto> createThread(@Valid @RequestBody CreateThreadRequest request) {
-        Long authorId = 1L;  // I need to change
-        var user = userRepository.findById(authorId).orElse(null);
-        System.out.println(user.getProfile().getUsername());
+        Long userId = (Long) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        var user = userRepository.findById(userId).orElseThrow();
 
         var thread = new Thread();
         thread.setContent(request.getContent());
