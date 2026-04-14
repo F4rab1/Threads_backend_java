@@ -26,6 +26,16 @@ public class Thread {
     @Column(nullable = false, length = 300)
     private String content;
 
+    @Column(name = "image_name")
+    private String imageName;
+
+    @Column(name = "image_type")
+    private String imageType;
+
+    @Lob
+    @Column(name = "image_data")
+    private byte[] imageData;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
