@@ -12,4 +12,9 @@ public class ThreadResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private Long authorId;
+
+    private String imageName;
+    private String imageType;
+    private Boolean hasImage;
+    private String imageUrl;
 }
