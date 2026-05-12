@@ -32,7 +32,6 @@ public class Thread {
     @Column(name = "image_type")
     private String imageType;
 
-    @Lob
     @Column(name = "image_data")
     private byte[] imageData;
 

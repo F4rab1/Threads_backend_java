@@ -3,14 +3,15 @@ package com.farabi.threads.threads;
 import com.farabi.threads.users.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +51,10 @@ public class ThreadController {
 
     @PostMapping
     @Operation(summary = "Create a thread.")
-    public ResponseEntity<ThreadResponseDto> createThread(@Valid @RequestBody CreateThreadRequest request) {
+    public ResponseEntity<ThreadResponseDto> createThread(
+            @RequestPart("content") String content,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) throws IOException {
         Long userId = (Long) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -61,9 +65,15 @@ public class ThreadController {
         var user = userRepository.findById(userId).orElseThrow();
 
         var thread = new Thread();
-        thread.setContent(request.getContent());
+        thread.setContent(content);
         thread.setAuthor(user);
         thread.setCreatedAt(LocalDateTime.now());
+
+        if (image != null && !image.isEmpty()) {
+            thread.setImageName(image.getOriginalFilename());
+            thread.setImageType(thread.getImageType());
+            thread.setImageData(image.getBytes());
+        }
 
         Thread saved = threadRepository.save(thread);
         ThreadResponseDto response = threadMapper.toResponseDto(saved);
