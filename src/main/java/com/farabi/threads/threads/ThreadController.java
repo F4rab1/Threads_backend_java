@@ -49,6 +49,18 @@ public class ThreadController {
         return ResponseEntity.ok(threadMapper.toResponseDto(thread));
     }
 
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getThreadImage(@PathVariable Long id) {
+        var thread = threadRepository.findById(id).orElse(null);
+
+        if (thread == null || thread.getImageData() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .body(thread.getImageData());
+    }
+
     @PostMapping
     @Operation(summary = "Create a thread.")
     public ResponseEntity<ThreadResponseDto> createThread(
