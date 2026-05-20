@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,6 +59,7 @@ public class ThreadController {
         }
 
         return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(thread.getImageType()))
                 .body(thread.getImageData());
     }
 
@@ -83,7 +85,7 @@ public class ThreadController {
 
         if (image != null && !image.isEmpty()) {
             thread.setImageName(image.getOriginalFilename());
-            thread.setImageType(thread.getImageType());
+            thread.setImageType(image.getContentType());
             thread.setImageData(image.getBytes());
         }
 
